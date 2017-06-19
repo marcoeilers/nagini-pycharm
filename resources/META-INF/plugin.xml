@@ -34,6 +34,7 @@
                            displayName="Nagini Options"
                            instance="ch.ethz.inf.pm.nagini.NaginiConfigurable"/>
       <executor implementation="ch.ethz.inf.pm.nagini.NaginiExecutor" />
+      <annotator language="Python" implementationClass="ch.ethz.inf.pm.nagini.NaginiAnnotator" />
   </extensions>
 
     <extensions defaultExtensionNs="Pythonid">

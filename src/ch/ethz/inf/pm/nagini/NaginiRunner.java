@@ -65,7 +65,6 @@ public class NaginiRunner extends GenericProgramRunner {
         ExecutionResult executionResult;
         RunProfile profile = env.getRunProfile();
         PythonRunConfiguration pprofile = (PythonRunConfiguration) profile;
-        //PythonRunConfiguration pprofile = new PythonRunConfiguration(ppprofile.getProject(), ppprofile.getFactory());
         String oldScriptParameters = pprofile.getScriptParameters();
         String oldScriptName = pprofile.getScriptName();
         Map<String, String> oldEnvs = pprofile.getEnvs();
@@ -87,8 +86,6 @@ public class NaginiRunner extends GenericProgramRunner {
         pprofile.setEnvs(oldEnvs);
         pprofile.setWorkingDirectory(oldWorkingDir);
 
-
-
-        return DefaultProgramRunnerKt.showRunContent(null, env);
+        return DefaultProgramRunnerKt.showRunContent(executionResult, env);
     }
 }
