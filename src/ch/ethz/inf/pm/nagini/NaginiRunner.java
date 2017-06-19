@@ -31,6 +31,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.jetbrains.python.run.PythonRunConfiguration;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,10 +41,11 @@ import java.util.Map;
  * @author yole
  */
 public class NaginiRunner extends GenericProgramRunner {
-    private static final String NAGINI_MAIN_PATH = "/home/marco/scion/git/nagini/src/nagini_translation/main.py";
-    private static final String WORKING_DIR = "/home/marco/scion/git/nagini/src";
-    private static final String MYPYDIR = "/usr/local/bin/mypy";
-    private static final String NAGINI_ARGS = "--verifier silicon --viper-jar-path /viper/testqp/silicon/target/scala-2.11/silicon.jar ";
+    private static final String NAGINI_MAIN_LOC = "src/nagini_translation/main.py";
+    //private static final String NAGINI_MAIN_PATH = "/home/marco/scion/git/nagini/src/nagini_translation/main.py";
+    //private static final String WORKING_DIR = "/home/marco/scion/git/nagini/src";
+    //private static final String MYPYDIR = "/usr/local/bin/mypy";
+    //private static final String NAGINI_ARGS = "--verifier silicon --viper-jar-path /viper/testqp/silicon/target/scala-2.11/silicon.jar ";
 
     @Override
     @NotNull
@@ -62,6 +64,12 @@ public class NaginiRunner extends GenericProgramRunner {
     protected RunContentDescriptor doExecute(@NotNull RunProfileState state, @NotNull ExecutionEnvironment env) throws ExecutionException {
         FileDocumentManager.getInstance().saveAllDocuments();
 
+        NaginiSettingsComponent settings = NaginiSettingsComponent.getInstance();
+        String naginiMainPath = settings.getNaginiDir() + File.separator + NAGINI_MAIN_LOC;
+        String workingDir = settings.getNaginiDir() + File.separator + "src";
+        String verifier = settings.getVerifier();
+        String args = "--verifier " + verifier.toLowerCase() + " --viper-jar-path " + (verifier.equals("Silicon") ? settings.getSiliconJar() : settings.getCarbonJar()) + " ";
+
         ExecutionResult executionResult;
         RunProfile profile = env.getRunProfile();
         PythonRunConfiguration pprofile = (PythonRunConfiguration) profile;
@@ -70,21 +78,26 @@ public class NaginiRunner extends GenericProgramRunner {
         Map<String, String> oldEnvs = pprofile.getEnvs();
         String oldWorkingDir = pprofile.getWorkingDirectory();
 
-        pprofile.setScriptParameters(NAGINI_ARGS + pprofile.getScriptName());
-        pprofile.setScriptName(NAGINI_MAIN_PATH);
+        pprofile.setScriptParameters(args + pprofile.getScriptName());
+        pprofile.setScriptName(naginiMainPath);
         Map<String, String> envs = new HashMap<String, String>();
-        envs.put("MYPYDIR", MYPYDIR);
+        envs.put("MYPYDIR", settings.getMypyDir());
         envs.put("MYPYPATH", "");
-        envs.put("PYTHONPATH", WORKING_DIR);
+        envs.put("PYTHONPATH", workingDir);
+        envs.put("Z3_EXE", settings.getZ3Path());
+        envs.put("BOOGIE_EXE", settings.getBoogiePath());
         pprofile.setEnvs(envs);
-        pprofile.setWorkingDirectory(WORKING_DIR);
+        pprofile.setWorkingDirectory(workingDir);
 
-        executionResult = state.execute(env.getExecutor(), this);
-        executionResult.getProcessHandler().addProcessListener(new NaginiProcessListener(pprofile.getProject(), oldScriptName));
-        pprofile.setScriptName(oldScriptName);
-        pprofile.setScriptParameters(oldScriptParameters);
-        pprofile.setEnvs(oldEnvs);
-        pprofile.setWorkingDirectory(oldWorkingDir);
+        try {
+            executionResult = state.execute(env.getExecutor(), this);
+            executionResult.getProcessHandler().addProcessListener(new NaginiProcessListener(pprofile.getProject(), oldScriptName));
+        }finally{
+            pprofile.setScriptName(oldScriptName);
+            pprofile.setScriptParameters(oldScriptParameters);
+            pprofile.setEnvs(oldEnvs);
+            pprofile.setWorkingDirectory(oldWorkingDir);
+        }
 
         return DefaultProgramRunnerKt.showRunContent(executionResult, env);
     }

@@ -7,18 +7,16 @@
     <depends>com.intellij.modules.python</depends>
 
   <description><![CDATA[
-      Enter short description for your plugin here.<br>
-      <em>most HTML tags may be used</em>
+      PyCharm plugin for Nagini.
     ]]></description>
 
   <change-notes><![CDATA[
-      Add change notes here.<br>
-      <em>most HTML tags may be used</em>
+      This is new.
     ]]>
   </change-notes>
 
   <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-  <idea-version since-build="145.0"/>
+  <idea-version since-build="171.0"/>
 
   <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
        on how to target different products -->
@@ -29,16 +27,18 @@
   <extensions defaultExtensionNs="com.intellij">
       <!-- <runConfigurationExtension implementation="ch.ethz.inf.pm.nagini.NaginiRunConfigurationExtension"/> -->
       <programRunner implementation="ch.ethz.inf.pm.nagini.NaginiRunner"/>
-      <projectConfigurable groupId="project"
+      <!--<projectConfigurable groupId="project"
                            id="ch.ethz.inf.pm.nagini.NaginiConfigurable"
                            displayName="Nagini Options"
-                           instance="ch.ethz.inf.pm.nagini.NaginiConfigurable"/>
+                           instance="ch.ethz.inf.pm.nagini.NaginiConfigurable"/> -->
       <executor implementation="ch.ethz.inf.pm.nagini.NaginiExecutor" />
       <annotator language="Python" implementationClass="ch.ethz.inf.pm.nagini.NaginiAnnotator" />
+      <applicationConfigurable groupId="tools" displayName="Nagini" id="preferences.Nagini" instance="ch.ethz.inf.pm.nagini.NaginiSettings"/>
+      <applicationService serviceInterface="ch.ethz.inf.pm.nagini.NaginiSettingsComponent" serviceImplementation="ch.ethz.inf.pm.nagini.NaginiSettingsComponent"/>
   </extensions>
 
     <extensions defaultExtensionNs="Pythonid">
-        <runConfigurationExtension implementation="ch.ethz.inf.pm.nagini.NaginiRunConfigurationExtension"/>
+        <!-- <runConfigurationExtension implementation="ch.ethz.inf.pm.nagini.NaginiRunConfigurationExtension"/> -->
     </extensions>
 
   <actions>

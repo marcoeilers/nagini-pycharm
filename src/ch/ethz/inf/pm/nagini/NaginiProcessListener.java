@@ -2,6 +2,7 @@ package ch.ethz.inf.pm.nagini;
 
 
 import com.intellij.codeHighlighting.Pass;
+import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.UpdateHighlightersUtil;
@@ -14,6 +15,7 @@ import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ReadAction;
+import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -111,7 +113,7 @@ public class NaginiProcessListener implements ProcessListener {
                         e1.printStackTrace();
                     }
 
-                    NaginiAnnotationHolder holder = new NaginiAnnotationHolder(vf.getModificationStamp());
+                    NaginiAnnotationHolder holder = new NaginiAnnotationHolder(e.getDocument().getText().hashCode());
                     holder.annotations = nas;
 
                     ReadAction.run(new ThrowableRunnable() {
@@ -129,6 +131,20 @@ public class NaginiProcessListener implements ProcessListener {
                             notification.notify(project);
                         }
                     });
+
+                    ApplicationManager.getApplication().invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            WriteAction.run(new ThrowableRunnable() {
+                                @Override
+                                public void run() throws Throwable {
+                                    e.getDocument().setText(e.getDocument().getText());
+                                }
+                            });
+                        }
+                    });
+
+
                 }
             }
         }

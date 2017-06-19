@@ -14,7 +14,7 @@ import java.util.Map;
  * Created by marco on 19.06.17.
  */
 public class NaginiAnnotator implements Annotator {
-    public static Map<PsiFile, NaginiAnnotationHolder> annotations = new HashMap<>();
+    public static final Map<PsiFile, NaginiAnnotationHolder> annotations = new HashMap<>();
 
     @Override
     public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
@@ -22,13 +22,12 @@ public class NaginiAnnotator implements Annotator {
             PsiFile file = (PsiFile) element;
             if (annotations.containsKey(file)){
                 NaginiAnnotationHolder annotationHolder = annotations.get(file);
-                if (file.getVirtualFile().getModificationStamp() == annotationHolder.modStamp){
+                if (file.getText().hashCode() == annotationHolder.modStamp){
                     List<NaginiAnnotation> as = annotationHolder.annotations;
                     for (NaginiAnnotation a: as){
                         holder.createErrorAnnotation(a.range, a.message);
                     }
                 }
-
             }
 
         }
