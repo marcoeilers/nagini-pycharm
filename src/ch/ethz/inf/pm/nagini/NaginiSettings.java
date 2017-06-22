@@ -26,6 +26,7 @@ public class NaginiSettings implements SearchableConfigurable, Configurable.NoSc
         private JTextField z3Path;
         private JTextField boogiePath;
         private JPanel panel;
+        private JCheckBox useServer;
 
         public NaginiSettingsPanel() {
             //final FileChooserDescriptor descriptor = createSceneBuilderDescriptor();
@@ -43,6 +44,7 @@ public class NaginiSettings implements SearchableConfigurable, Configurable.NoSc
             final String verifierS = settings.getVerifier();
             final String z3PathS = settings.getZ3Path();
             final String boogiePathS = settings.getBoogiePath();
+            final boolean useServerB = settings.getUseServer();
             naginiDir.setText(naginiDirS == null ? "" : naginiDirS);
             siliconJar.setText(siliconJarS == null ? "" : siliconJarS);
             carbonJar.setText(carbonJarS == null ? "" : carbonJarS);
@@ -50,6 +52,7 @@ public class NaginiSettings implements SearchableConfigurable, Configurable.NoSc
             z3Path.setText(z3PathS == null ? "" : z3PathS);
             boogiePath.setText(boogiePathS == null ? "" : boogiePathS);
             verifier.setSelectedItem(verifierS == null ? "Silicon" : verifierS);
+            useServer.setSelected(useServerB);
         }
 
         private void apply(NaginiSettingsComponent settings) {
@@ -60,6 +63,7 @@ public class NaginiSettings implements SearchableConfigurable, Configurable.NoSc
             settings.setZ3Path(z3Path.getText());
             settings.setBoogiePath(boogiePath.getText());
             settings.setVerifier((String)verifier.getSelectedItem());
+            settings.setUseServer(useServer.isSelected());
         }
 
         private boolean isModified(NaginiSettingsComponent settings) {

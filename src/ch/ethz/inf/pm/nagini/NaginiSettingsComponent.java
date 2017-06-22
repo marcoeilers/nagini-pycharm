@@ -16,13 +16,14 @@ import org.jetbrains.annotations.Nullable;
                 @Storage("other.xml")}
 )
 public class NaginiSettingsComponent implements PersistentStateComponent<NaginiSettingsComponent> {
-    public String naginiDir = null;
-    public String siliconJar = null;
-    public String carbonJar = null;
-    public String mypyDir = null;
-    public String z3Path = null;
-    public String boogiePath = null;
-    public String verifier = null;
+    private String naginiDir = null;
+    private String siliconJar = null;
+    private String carbonJar = null;
+    private String mypyDir = null;
+    private String z3Path = null;
+    private String boogiePath = null;
+    private String verifier = null;
+    private boolean useServer = false;
 
     public String getNaginiDir() {
         return naginiDir;
@@ -78,6 +79,14 @@ public class NaginiSettingsComponent implements PersistentStateComponent<NaginiS
 
     public void setVerifier(String verifier) {
         this.verifier = verifier;
+    }
+
+    public boolean getUseServer() {
+        return useServer;
+    }
+
+    public void setUseServer(boolean useServer) {
+        this.useServer = useServer;
     }
 
     public static NaginiSettingsComponent getInstance() {
