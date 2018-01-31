@@ -33,8 +33,8 @@ public class NaginiServer {
         envs.put("PYTHONPATH", workingDir);
         envs.put("Z3_EXE", settings.getZ3Path());
         envs.put("BOOGIE_EXE", settings.getBoogiePath());
-        pb.redirectError(new File("/home/marco/servererror.txt"));
-        pb.redirectOutput(new File("/home/marco/serverout.txt"));
+        pb.redirectError(new File(System.getProperty("user.home") + "/servererror.txt"));
+        pb.redirectOutput(new File(System.getProperty("user.home") + "/serverout.txt"));
         try {
             Process p = pb.start();
             currentProcess = p;
