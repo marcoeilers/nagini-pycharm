@@ -29,7 +29,7 @@ public class NaginiServer {
         pb.directory(new File(workingDir));
         Map<String, String> envs = pb.environment();
         envs.put("MYPYDIR", settings.getMypyDir());
-        envs.put("MYPYPATH", "");
+        //envs.put("MYPYPATH", "");
         envs.put("PYTHONPATH", workingDir);
         envs.put("Z3_EXE", settings.getZ3Path());
         envs.put("BOOGIE_EXE", settings.getBoogiePath());

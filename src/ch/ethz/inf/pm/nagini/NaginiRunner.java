@@ -96,7 +96,7 @@ public class NaginiRunner extends GenericProgramRunner {
             String naginiMainPath = settings.getNaginiDir() + File.separator + NaginiRunner.NAGINI_MAIN_LOC;
             pprofile.setScriptName(naginiMainPath);
             envs.put("MYPYDIR", settings.getMypyDir());
-            envs.put("MYPYPATH", "");
+            //envs.put("MYPYPATH", "");
             envs.put("PYTHONPATH", workingDir);
             envs.put("Z3_EXE", settings.getZ3Path());
             envs.put("BOOGIE_EXE", settings.getBoogiePath());
